@@ -111,7 +111,7 @@ OK: Markdown generated, 145,000 chars, output to /tmp/markitdown_output.md
 | `.html` `.htm` | HTML | ≤10 MB | >10 MB: headings + 2,000 chars | — |
 | `.epub` | EPub | ≤10 MB | >10 MB: TOC + first 3 chapters | — |
 | `.xlsx` `.xls` | Excel | ≤2 MB | >2 MB: pandas summary only | openpyxl |
-| `.csv` | CSV | ≤2 MB | >2 MB: **pandas summary ONLY** | pandas |
+| `.csv` | CSV | ≤2 MB | >2 MB: pandas summary ONLY | pandas |
 | `.txt` `.rtf` | Plain text | ≤10 MB | >10 MB: first 5,000 chars | — |
 | `.png` `.jpg` `.jpeg` `.tiff` `.bmp` `.gif` | Image | Any size | >50 MB: OCR memory warning | ocr-and-documents skill |
 
@@ -139,7 +139,7 @@ markitdown-auto-converter-agent-skill/
 ├── .gitignore
 └── skills/
     └── markitdown-auto-converter-agent-skill/
-        ├── SKILL.md           ← 必须在这个路径
+        ├── SKILL.md 
         └── scripts/
             └── convert_and_verify.py
 ```
