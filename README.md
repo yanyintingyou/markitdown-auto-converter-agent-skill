@@ -1,160 +1,175 @@
-# MarkItDown Auto Converter Agent Skill
+# MarkItDown Auto Converter Agent Skill / MarkItDown 自动转换 Agent Skill
 
-A Hermes Agent skill that automatically converts documents to Markdown via `microsoft/markitdown`, with intelligent size-based routing for large tabular files.
-
----
-
-## Short Description
-
-**Smart document-to-Markdown conversion for Hermes Agent. Routes small files through markitdown, large CSVs/Excel through pandas summaries, and rejects oversized files with actionable alternatives.**
+[English](#english) | [中文](#中文)
 
 ---
 
-## Features
+## English
 
-- **Explicit trigger only** — Activates on clear user intent (e.g. "转成markdown", "convert to markdown"), avoiding false positives from casual file mentions.
-- **Automatic size-based routing** — No need to manually choose tools; the skill picks the right strategy.
-- **Small documents** (PDF ≤3 MB, Word/PPT/HTML ≤10 MB) → Full Markdown conversion via markitdown.
-- **Medium documents** (PDF 3–30 MB, Word/PPT >10 MB) → Preview mode (first N pages / 15,000 chars) to prevent context overflow.
-- **Large tables** (CSV/Excel >2 MB) → **Rejects full Markdown table conversion**; generates a pandas data exploration summary (shape, dtypes, stats, sample rows) instead.
-- **Oversized files** (>1 GB) → Rejected with suggestions (streaming tools, databases, filtered queries).
-- **Standalone script included** — `convert_and_verify.py` can be run independently in the terminal.
-- **OCR support** — Images (PNG, JPG, etc.) converted via markitdown OCR, with quality warnings for scanned documents.
+A portable document-to-Markdown conversion skill for Hermes Agent, Claude Code, Codex/OpenAI agents, Cursor, and generic agent frameworks. It uses [Microsoft MarkItDown](https://github.com/microsoft/markitdown) where appropriate and avoids unsafe full-table conversion for large CSV/Excel files.
 
----
+### What this skill does
 
-## Why Not Convert Everything to Markdown?
+- Converts small PDFs, Word files, PowerPoint files, HTML, EPUB, text files, and images to Markdown.
+- Produces previews for medium/large documents to avoid context overflow.
+- Summarizes large CSV/Excel files with pandas instead of generating massive Markdown tables.
+- Provides a standalone script: `scripts/convert_and_verify.py`.
+- Ships with compatibility files for Hermes, Claude Code, Codex/OpenAI agents, and Cursor.
 
-Markdown tables inflate 3–5× compared to raw CSV due to `| col1 | col2 | ... |\n` syntax overhead. A 2 MB CSV (~20,000 rows) becomes ~6–10 MB Markdown, which already pushes LLM context limits. A 10 MB CSV would be ~30–50 MB Markdown — impossible to fit into any model's context window.
+### Repository structure
 
-This skill solves that by switching to **pandas data exploration summaries** for large tabular files: the agent sees structure, statistics, and a small sample, without drowning in a million-row Markdown table.
-
----
-
-## Installation
-
-### 1. Dependencies
-
-```bash
-pip install markitdown pandas
-```
-
-Verify:
-```bash
-markitdown --version
-python3 -c "import pandas; print(pandas.__version__)"
-```
-
-### 2. As a Hermes Skill
-
-Copy the skill directory into your Hermes skills repo:
-
-```bash
-cp -r markitdown-auto-converter-agent-skill ~/.hermes/skills/productivity/
-# or within your own skill tap repo:
-# cp -r markitdown-auto-converter-agent-skill skills/productivity/
-```
-
-The skill auto-registers on the next Hermes session.
-
----
-
-## Usage
-
-### In Hermes Agent
-
-Trigger by explicitly requesting Markdown conversion:
-
-```
-把这份年报转成 Markdown
-```
-```
-Convert this report.pdf to markdown
-```
-```
-MD 格式处理这个 CSV
-```
-
-The skill will:
-1. Check file size and extension.
-2. Route to the appropriate strategy (full / preview / pandas summary / reject).
-3. Return the output or a rejection message with alternatives.
-
-### Standalone Script
-
-```bash
-# Pre-check and auto-convert
-python3 scripts/convert_and_verify.py --file report.pdf
-
-# Custom output path
-python3 scripts/convert_and_verify.py --file data.csv --output /tmp/result.md
-```
-
-Example output:
-```
-FILE: /home/user/report.pdf
-SIZE: 2.80 MB
-STRATEGY: markitdown_full
-REASON: PDF 2.8 MB ≤ 3 MB threshold, full Markdown conversion.
-OK: Markdown generated, 145,000 chars, output to /tmp/markitdown_output.md
-```
-
----
-
-## Supported File Types & Thresholds
-
-| Extension | Type | Full Convert | Preview / Reject Threshold | Fallback |
-|-----------|------|-------------|---------------------------|----------|
-| `.pdf` | PDF | ≤3 MB | 3–30 MB: first 20 pages + TOC; >30 MB: reject | PyMuPDF |
-| `.docx` | Word | ≤10 MB | >10 MB: TOC + 5,000 chars | — |
-| `.pptx` | PowerPoint | ≤10 MB | >10 MB: first 10 slides + outline | — |
-| `.html` `.htm` | HTML | ≤10 MB | >10 MB: headings + 2,000 chars | — |
-| `.epub` | EPub | ≤10 MB | >10 MB: TOC + first 3 chapters | — |
-| `.xlsx` `.xls` | Excel | ≤2 MB | >2 MB: pandas summary only | openpyxl |
-| `.csv` | CSV | ≤2 MB | >2 MB: pandas summary ONLY | pandas |
-| `.txt` `.rtf` | Plain text | ≤10 MB | >10 MB: first 5,000 chars | — |
-| `.png` `.jpg` `.jpeg` `.tiff` `.bmp` `.gif` | Image | Any size | >50 MB: OCR memory warning | ocr-and-documents skill |
-
----
-
-## Trigger Keywords
-
-The skill activates when the user explicitly says any of the following (case-insensitive):
-
-- 转成markdown / 转成md / 转md
-- markdown处理 / md格式处理 / md 格式看一下
-- convert to markdown / process as md
-- export to markdown / save as md
-
-**Does NOT trigger on:** "analyze this PDF", "read this file", "how many rows in this CSV" — these are handled by general agent logic or other skills.
-
----
-
-## Project Structure
-
-```
+```text
 markitdown-auto-converter-agent-skill/
-├── LICENSE
+├── SKILL.md                                        # Canonical cross-agent skill
 ├── README.md
-├── .gitignore
+├── LICENSE
+├── AGENTS.md                                      # Codex / OpenAI agent instructions
+├── CLAUDE.md                                      # Claude Code instructions
+├── .cursorrules                                   # Legacy Cursor rules
+├── .cursor/rules/markitdown-auto-converter.mdc    # Cursor rule file
+├── scripts/
+│   └── convert_and_verify.py                      # Standalone conversion router
 └── skills/
-    └── markitdown-auto-converter-agent-skill/
-        ├── SKILL.md 
-        └── scripts/
-            └── convert_and_verify.py
+    └── productivity/
+        └── markitdown-auto-converter-agent-skill/
+            ├── SKILL.md                           # Hermes-compatible copy
+            └── scripts/
+                └── convert_and_verify.py
 ```
 
+### Installation
+
+#### Python dependencies
+
+```bash
+python3 -m pip install markitdown pandas openpyxl tabulate
+```
+
+#### Hermes Agent
+
+```bash
+git clone https://github.com/yanyintingyou/markitdown-auto-converter-agent-skill.git
+mkdir -p ~/.hermes/skills/productivity
+cp -r markitdown-auto-converter-agent-skill/skills/productivity/markitdown-auto-converter-agent-skill ~/.hermes/skills/productivity/
+```
+
+Restart Hermes or start a new session.
+
+#### Claude Code
+
+Clone the repository into your project or skill collection. Claude Code reads `CLAUDE.md`, which points to `SKILL.md`.
+
+#### Codex / OpenAI agents
+
+Keep `AGENTS.md` at repository root. Codex-style agents should load `SKILL.md` and may call `scripts/convert_and_verify.py`.
+
+#### Cursor
+
+Open the repository or copy `.cursor/rules/markitdown-auto-converter.mdc` into your project’s `.cursor/rules/` directory.
+
+### Usage
+
+```bash
+python3 scripts/convert_and_verify.py --file report.pdf --output /tmp/report.md
+python3 scripts/convert_and_verify.py --file data.csv --output /tmp/data_summary.md
+```
+
+Agent prompt examples:
+
+```text
+Convert this annual report PDF to Markdown.
+```
+
+```text
+把这个 Excel 转成 Markdown；如果太大就先给我 pandas 摘要。
+```
+
+### Design rule
+
+CSV/Excel files larger than 2 MB are **not** converted into full Markdown tables. They are summarized with pandas to avoid context overflow.
+
 ---
 
-## Design Notes
+## 中文
 
-- **Conservative thresholds**: PDF full-conversion capped at 3 MB because markitdown can OOM on larger files. CSV/Excel table conversion capped at 2 MB because Markdown table inflation quickly exceeds LLM context windows.
-- **Fail gracefully**: Every rejection includes an actionable alternative (PyMuPDF, pandas, streaming tools).
-- **No API keys**: Pure local tooling. No external tokens consumed.
-- **Idempotent**: Running the script multiple times on the same file produces the same strategy decision.
+这是一个可移植的文档转 Markdown Agent Skill，兼容 Hermes Agent、Claude Code、Codex/OpenAI Agents、Cursor 与通用 Agent 框架。它在合适场景下调用 [Microsoft MarkItDown](https://github.com/microsoft/markitdown)，并避免把大型 CSV/Excel 强行转换成巨大的 Markdown 表格。
 
----
+### 功能概览
 
-## License
+- 将小型 PDF、Word、PPT、HTML、EPUB、文本文件和图片转换为 Markdown。
+- 对中大型文档生成预览，避免撑爆上下文窗口。
+- 对大型 CSV/Excel 使用 pandas 生成数据探索摘要，而不是输出超大 Markdown 表格。
+- 提供独立脚本：`scripts/convert_and_verify.py`。
+- 提供 Hermes、Claude Code、Codex/OpenAI Agents、Cursor 兼容文件。
 
-MIT
+### 仓库结构
+
+```text
+markitdown-auto-converter-agent-skill/
+├── SKILL.md                                        # 跨 Agent 通用主技能文件
+├── README.md
+├── LICENSE
+├── AGENTS.md                                      # Codex / OpenAI Agent 指令
+├── CLAUDE.md                                      # Claude Code 指令
+├── .cursorrules                                   # Cursor 旧版规则
+├── .cursor/rules/markitdown-auto-converter.mdc    # Cursor 新版规则
+├── scripts/
+│   └── convert_and_verify.py                      # 独立转换与路由脚本
+└── skills/
+    └── productivity/
+        └── markitdown-auto-converter-agent-skill/
+            ├── SKILL.md                           # Hermes 标准安装路径
+            └── scripts/
+                └── convert_and_verify.py
+```
+
+### 安装方式
+
+#### Python 依赖
+
+```bash
+python3 -m pip install markitdown pandas openpyxl tabulate
+```
+
+#### Hermes Agent
+
+```bash
+git clone https://github.com/yanyintingyou/markitdown-auto-converter-agent-skill.git
+mkdir -p ~/.hermes/skills/productivity
+cp -r markitdown-auto-converter-agent-skill/skills/productivity/markitdown-auto-converter-agent-skill ~/.hermes/skills/productivity/
+```
+
+然后重启 Hermes 或开启新会话。
+
+#### Claude Code
+
+把本仓库克隆到项目目录或技能集合中。Claude Code 会读取 `CLAUDE.md`，该文件会指向 `SKILL.md`。
+
+#### Codex / OpenAI Agents
+
+保留根目录 `AGENTS.md`。Codex 风格 Agent 应加载 `SKILL.md`，并可调用 `scripts/convert_and_verify.py`。
+
+#### Cursor
+
+直接打开本仓库，或将 `.cursor/rules/markitdown-auto-converter.mdc` 复制到项目的 `.cursor/rules/` 目录。
+
+### 使用方式
+
+```bash
+python3 scripts/convert_and_verify.py --file report.pdf --output /tmp/report.md
+python3 scripts/convert_and_verify.py --file data.csv --output /tmp/data_summary.md
+```
+
+Agent 提示示例：
+
+```text
+把这份年报 PDF 转成 Markdown。
+```
+
+```text
+把这个 Excel 转成 Markdown；如果太大就先给我 pandas 摘要。
+```
+
+### 设计原则
+
+超过 2 MB 的 CSV/Excel **不做完整 Markdown 表格转换**，而是生成 pandas 数据探索摘要，避免上下文溢出和无意义的大表输出。

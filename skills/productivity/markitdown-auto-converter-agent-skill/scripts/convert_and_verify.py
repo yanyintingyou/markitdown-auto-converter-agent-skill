@@ -290,7 +290,11 @@ def exec_csv_mixed(filepath, output_md):
             return False, "pandas summary generation failed"
 
         df_sample = pd.read_csv(filepath, nrows=100)
-        md_table = df_sample.to_markdown(index=False)
+        try:
+            md_table = df_sample.to_markdown(index=False)
+        except ImportError:
+            md_table = df_sample.to_csv(index=False)
+            md_table = "`tabulate` is not installed; showing CSV sample instead of Markdown table.\n\n" + md_table
 
         with open(output_md, 'a', encoding='utf-8') as f:
             f.write("\n\n")
@@ -299,7 +303,7 @@ def exec_csv_mixed(filepath, output_md):
             f.write(md_table)
             f.write("\n")
 
-        return True, "pandas summary + first 100 rows Markdown table"
+        return True, os.path.getsize(output_md)
 
     except Exception as e:
         return False, f"CSV mixed processing failed: {str(e)}"
@@ -355,7 +359,8 @@ def main():
         else:
             ok, result = exec_pandas_summary(info['path'], info['ext'], args.output)
         if ok:
-            print(f"OK: Data exploration summary generated, {result} chars, output to {args.output}")
+            unit = "bytes" if isinstance(result, int) else "chars"
+            print(f"OK: Data exploration summary generated, {result} {unit}, output to {args.output}")
         else:
             print(f"ERROR: {result}")
             sys.exit(1)

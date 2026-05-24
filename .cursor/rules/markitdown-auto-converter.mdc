@@ -1,0 +1,7 @@
+---
+description: Convert documents to Markdown with size-aware MarkItDown/pandas routing.
+globs: ["**/*.pdf", "**/*.docx", "**/*.pptx", "**/*.html", "**/*.csv", "**/*.xlsx", "**/*.md"]
+alwaysApply: false
+---
+
+Load `SKILL.md` when the user explicitly asks to convert/export/save/process a file as Markdown or MD. Do not activate for casual file mentions. For CSV/Excel larger than 2 MB, produce a pandas summary instead of a full Markdown table.

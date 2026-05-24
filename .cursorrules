@@ -1,0 +1,1 @@
+When working in this repository, treat SKILL.md as the canonical MarkItDown conversion skill. Activate only on explicit Markdown conversion intent and avoid full Markdown tables for large CSV/Excel files.
