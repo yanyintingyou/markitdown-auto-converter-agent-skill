@@ -43,7 +43,7 @@ Do **not** activate this skill for:
 Recommended Python packages:
 
 ```bash
-python3 -m pip install markitdown pandas openpyxl tabulate
+python3 -m pip install -r requirements.txt
 ```
 
 Notes:

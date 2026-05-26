@@ -9,9 +9,10 @@ Usage:
 """
 
 import argparse
+import contextlib
+import io
 import os
 import sys
-import subprocess
 import shlex
 
 # ---------------------------------------------------------------------------
@@ -148,20 +149,23 @@ def determine_strategy(info):
 # ---------------------------------------------------------------------------
 
 def exec_markitdown(filepath, output_md, max_chars=None):
-    """Run markitdown CLI and optionally truncate output."""
+    """Run markitdown through its Python API and optionally truncate output."""
     try:
-        result = subprocess.run(
-            ['markitdown', filepath],
-            capture_output=True,
-            text=True,
-            timeout=120,
-            encoding='utf-8',
-            errors='replace',
-        )
-        if result.returncode != 0:
-            return False, f"markitdown error (exit={result.returncode}): {result.stderr[:500]}"
+        from markitdown import MarkItDown
+    except ImportError:
+        return False, "markitdown not installed. Install dependencies from requirements.txt"
 
-        content = result.stdout
+    try:
+        converter = MarkItDown()
+        stderr_buffer = io.StringIO()
+        with contextlib.redirect_stderr(stderr_buffer):
+            result = converter.convert(filepath)
+        content = getattr(result, 'text_content', '') or ''
+        if not content:
+            err = stderr_buffer.getvalue().strip()
+            detail = f": {err[:500]}" if err else ""
+            return False, f"markitdown produced no text content{detail}"
+
         if max_chars and len(content) > max_chars:
             content = (
                 content[:max_chars]
@@ -173,10 +177,8 @@ def exec_markitdown(filepath, output_md, max_chars=None):
 
         return True, len(content)
 
-    except subprocess.TimeoutExpired:
-        return False, "markitdown timed out (>120 s). File may be too large or malformed."
-    except FileNotFoundError:
-        return False, "markitdown not installed. Run: pip install markitdown pandas"
+    except TimeoutError:
+        return False, "markitdown timed out. File may be too large or malformed."
     except Exception as e:
         return False, f"markitdown execution error: {str(e)}"
 
@@ -186,7 +188,7 @@ def exec_pandas_summary(filepath, ext, output_md):
     try:
         import pandas as pd
     except ImportError:
-        return False, "pandas not installed. Run: pip install pandas"
+        return False, "pandas not installed. Install dependencies from requirements.txt"
 
     try:
         if ext == '.csv':

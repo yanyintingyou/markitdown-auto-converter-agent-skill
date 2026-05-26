@@ -42,7 +42,7 @@ markitdown-auto-converter-agent-skill/
 #### Python dependencies
 
 ```bash
-python3 -m pip install markitdown pandas openpyxl tabulate
+python3 -m pip install -r requirements.txt
 ```
 
 #### Hermes Agent
@@ -128,7 +128,7 @@ markitdown-auto-converter-agent-skill/
 #### Python 依赖
 
 ```bash
-python3 -m pip install markitdown pandas openpyxl tabulate
+python3 -m pip install -r requirements.txt
 ```
 
 #### Hermes Agent
