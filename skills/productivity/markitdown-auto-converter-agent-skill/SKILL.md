@@ -122,9 +122,9 @@ OK: Markdown generated, 145000 chars, output to /tmp/report.md
 ## Compatibility Notes for Agents
 
 - **Hermes**: copy `skills/productivity/markitdown-auto-converter-agent-skill/` into `~/.hermes/skills/productivity/`.
-- **Claude Code**: `CLAUDE.md` points to the canonical root `SKILL.md`.
-- **Codex / OpenAI agents**: `AGENTS.md` points to `SKILL.md` and the companion script.
-- **Cursor**: use `.cursor/rules/markitdown-auto-converter.mdc` or `.cursorrules`.
+- **Claude Code**: the repository-level compatibility adapter points to the canonical root `SKILL.md`.
+- **Codex / OpenAI agents**: `agent instruction file` points to `SKILL.md` and the companion script.
+- **Cursor**: use `IDE rule adapter directory/markitdown-auto-converter.mdc` or `Cursor rule adapter`.
 - **Generic agents**: root `SKILL.md` is authoritative.
 
 ## Common Pitfalls

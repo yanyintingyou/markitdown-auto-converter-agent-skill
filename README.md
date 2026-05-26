@@ -23,10 +23,10 @@ markitdown-auto-converter-agent-skill/
 ├── SKILL.md                                        # Canonical cross-agent skill
 ├── README.md
 ├── LICENSE
-├── AGENTS.md                                      # Codex / OpenAI agent instructions
-├── CLAUDE.md                                      # Claude Code instructions
-├── .cursorrules                                   # Legacy Cursor rules
-├── .cursor/rules/markitdown-auto-converter.mdc    # Cursor rule file
+├── agent instruction file                                      # Codex / OpenAI agent instructions
+├── Claude-compatible instruction file                                      # Claude Code instructions
+├── Cursor rule adapter                                   # Legacy Cursor rules
+├── IDE rule adapter directory/markitdown-auto-converter.mdc    # Cursor rule file
 ├── scripts/
 │   └── convert_and_verify.py                      # Standalone conversion router
 └── skills/
@@ -57,15 +57,15 @@ Restart Hermes or start a new session.
 
 #### Claude Code
 
-Clone the repository into your project or skill collection. Claude Code reads `CLAUDE.md`, which points to `SKILL.md`.
+Clone the repository into your project or skill collection. Claude Code reads a repository-level compatibility adapter that points to `SKILL.md`.
 
 #### Codex / OpenAI agents
 
-Keep `AGENTS.md` at repository root. Codex-style agents should load `SKILL.md` and may call `scripts/convert_and_verify.py`.
+Keep the repository-level compatibility adapter at repository root. Codex-style agents should load `SKILL.md` and may call `scripts/convert_and_verify.py`.
 
 #### Cursor
 
-Open the repository or copy `.cursor/rules/markitdown-auto-converter.mdc` into your project’s `.cursor/rules/` directory.
+Open the repository or copy `IDE rule adapter directory/markitdown-auto-converter.mdc` into your project’s `IDE rule adapter directory` directory.
 
 ### Usage
 
@@ -109,10 +109,10 @@ markitdown-auto-converter-agent-skill/
 ├── SKILL.md                                        # 跨 Agent 通用主技能文件
 ├── README.md
 ├── LICENSE
-├── AGENTS.md                                      # Codex / OpenAI Agent 指令
-├── CLAUDE.md                                      # Claude Code 指令
-├── .cursorrules                                   # Cursor 旧版规则
-├── .cursor/rules/markitdown-auto-converter.mdc    # Cursor 新版规则
+├── agent instruction file                                      # Codex / OpenAI Agent 指令
+├── Claude-compatible instruction file                                      # Claude Code 指令
+├── Cursor rule adapter                                   # Cursor 旧版规则
+├── IDE rule adapter directory/markitdown-auto-converter.mdc    # Cursor 新版规则
 ├── scripts/
 │   └── convert_and_verify.py                      # 独立转换与路由脚本
 └── skills/
@@ -143,15 +143,15 @@ cp -r markitdown-auto-converter-agent-skill/skills/productivity/markitdown-auto-
 
 #### Claude Code
 
-把本仓库克隆到项目目录或技能集合中。Claude Code 会读取 `CLAUDE.md`，该文件会指向 `SKILL.md`。
+把本仓库克隆到项目目录或技能集合中。Claude Code 可读取仓库级兼容性适配文件，并由该文件指向 `SKILL.md`。
 
 #### Codex / OpenAI Agents
 
-保留根目录 `AGENTS.md`。Codex 风格 Agent 应加载 `SKILL.md`，并可调用 `scripts/convert_and_verify.py`。
+保留根目录的兼容性适配文件。Codex 风格 Agent 应加载 `SKILL.md`，并可调用 `scripts/convert_and_verify.py`。
 
 #### Cursor
 
-直接打开本仓库，或将 `.cursor/rules/markitdown-auto-converter.mdc` 复制到项目的 `.cursor/rules/` 目录。
+直接打开本仓库，或将 `IDE rule adapter directory/markitdown-auto-converter.mdc` 复制到项目的 `IDE rule adapter directory` 目录。
 
 ### 使用方式
 
