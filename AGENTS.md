@@ -1,9 +1,11 @@
-# Agent Instructions
+# Agent Instructions — MarkItDown Auto Converter Agent Skill
 
-This repository contains a document-to-Markdown conversion skill. Load and follow `SKILL.md` when the user explicitly asks to convert/export/save/process a file as Markdown or MD.
+This repository packages the `markitdown-auto-converter-agent-skill` AgentSkills-compatible skill.
 
-Important:
-1. Do not trigger for casual file mentions.
-2. Use `scripts/convert_and_verify.py` when available.
-3. Never dump large CSV/Excel files as full Markdown tables; summarize with pandas.
-4. For Hermes installation, use `skills/productivity/markitdown-auto-converter-agent-skill/`.
+For Codex/OpenAI-style agents:
+
+1. Treat the root `SKILL.md` as the canonical skill instructions when working in this repository.
+2. If installing as a reusable skill, copy `skills/productivity/markitdown-auto-converter-agent-skill/` to your agent skills directory as `markitdown-auto-converter-agent-skill/`.
+3. Do not use stale paths from older layouts; the Hermes-style packaged copy is `skills/productivity/markitdown-auto-converter-agent-skill/SKILL.md`.
+
+Follow the privacy, safety, and verification rules in `SKILL.md`.

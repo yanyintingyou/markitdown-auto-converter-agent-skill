@@ -4,13 +4,8 @@ description: Use when the user explicitly asks to convert local or remote docume
 version: 1.1.0
 author: yanyintingyou
 license: MIT
-metadata:
-  hermes:
-    category: productivity
-    tags: [document-conversion, markdown, markitdown, pdf, docx, pptx, csv, excel, large-files]
-    related_skills: [ocr-and-documents]
-  compatibility:
-    agents: [Hermes, Claude Code, Codex, Cursor, OpenAI Agents, generic-agent]
+platforms: [linux, macos, windows]
+metadata: {"hermes":{"category":"productivity","tags":["document-conversion","markdown","markitdown","pdf","docx","pptx","csv","excel","large-files"],"related_skills":[]},"openclaw":{"homepage":"https://github.com/yanyintingyou/markitdown-auto-converter-agent-skill"},"compatibility":{"agents":["Hermes Agent","Claude Code","OpenAI Codex","OpenClaw","generic AgentSkills loaders"]}}
 ---
 
 # MarkItDown Auto Converter Agent Skill

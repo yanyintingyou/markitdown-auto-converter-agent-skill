@@ -1,8 +1,17 @@
-# Claude Code Instructions
+# Claude Code Instructions — MarkItDown Auto Converter Agent Skill
 
-Use `SKILL.md` as the canonical skill definition for this repository. This is a document conversion skill.
+Use the root `SKILL.md` as the canonical instructions for this repository.
 
-When responding:
-- Activate only on explicit Markdown conversion intent.
-- Prefer the companion script `scripts/convert_and_verify.py`.
-- Avoid context flooding; return output paths/previews for large conversions.
+For Claude Code skill installation, copy the packaged skill directory:
+
+```text
+skills/productivity/markitdown-auto-converter-agent-skill/
+```
+
+to:
+
+```text
+~/.claude/skills/markitdown-auto-converter-agent-skill/
+```
+
+The directory name and the `name:` field are both `markitdown-auto-converter-agent-skill`. Do not reference older repository layouts.

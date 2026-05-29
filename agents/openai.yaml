@@ -1,0 +1,4 @@
+interface:
+  display_name: "MarkItDown Auto Converter Agent Skill"
+  short_description: "AgentSkills-compatible skill: markitdown-auto-converter-agent-skill"
+  default_prompt: "Use $markitdown-auto-converter-agent-skill and follow SKILL.md."

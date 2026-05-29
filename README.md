@@ -4,6 +4,30 @@
 
 ---
 
+
+## Cross-agent compatibility and installation
+
+This repository now uses a dual-layout skill structure:
+
+```text
+repo/
+├── SKILL.md                                      # canonical cross-agent instructions
+├── AGENTS.md                                    # Codex/OpenAI project instructions
+├── CLAUDE.md                                    # Claude Code project instructions
+├── agents/openai.yaml                           # optional OpenAI agent metadata
+└── skills/productivity/markitdown-auto-converter-agent-skill/SKILL.md  # Hermes/OpenClaw packaged skill copy
+```
+
+The root `SKILL.md` and the packaged `skills/productivity/markitdown-auto-converter-agent-skill/SKILL.md` are intentionally byte-identical. Supporting files, when present, are available next to both copies.
+
+### Install as a reusable skill
+
+- **Claude Code**: copy `skills/productivity/markitdown-auto-converter-agent-skill/` to `~/.claude/skills/markitdown-auto-converter-agent-skill/`.
+- **OpenAI Codex / OpenAI agents**: keep `AGENTS.md` when working in this repository, or copy `skills/productivity/markitdown-auto-converter-agent-skill/` to `~/.agents/skills/markitdown-auto-converter-agent-skill/` for a reusable skill.
+- **OpenClaw**: copy `skills/productivity/markitdown-auto-converter-agent-skill/` to either `<workspace>/skills/markitdown-auto-converter-agent-skill/`, `<workspace>/.agents/skills/markitdown-auto-converter-agent-skill/`, or `~/.openclaw/skills/markitdown-auto-converter-agent-skill/`.
+- **Hermes Agent**: copy `skills/productivity/markitdown-auto-converter-agent-skill/` to `~/.hermes/skills/productivity/markitdown-auto-converter-agent-skill/`, then start a new Hermes session.
+- **Generic AgentSkills loaders**: use the directory that contains `SKILL.md`; the skill name is `markitdown-auto-converter-agent-skill`.
+
 ## English
 
 A portable document-to-Markdown conversion skill for Hermes Agent, Claude Code, Codex/OpenAI agents, Cursor, and generic agent frameworks. It uses [Microsoft MarkItDown](https://github.com/microsoft/markitdown) where appropriate and avoids unsafe full-table conversion for large CSV/Excel files.
@@ -23,8 +47,8 @@ markitdown-auto-converter-agent-skill/
 ├── SKILL.md                                        # Canonical cross-agent skill
 ├── README.md
 ├── LICENSE
-├── agent instruction file                                      # Codex / OpenAI agent instructions
-├── Claude-compatible instruction file                                      # Claude Code instructions
+├── AGENTS.md                                      # Codex / OpenAI agent instructions
+├── CLAUDE.md                                      # Claude Code instructions
 ├── Cursor rule adapter                                   # Legacy Cursor rules
 ├── IDE rule adapter directory/markitdown-auto-converter.mdc    # Cursor rule file
 ├── scripts/
@@ -109,8 +133,8 @@ markitdown-auto-converter-agent-skill/
 ├── SKILL.md                                        # 跨 Agent 通用主技能文件
 ├── README.md
 ├── LICENSE
-├── agent instruction file                                      # Codex / OpenAI Agent 指令
-├── Claude-compatible instruction file                                      # Claude Code 指令
+├── AGENTS.md                                      # Codex / OpenAI Agent 指令
+├── CLAUDE.md                                      # Claude Code 指令
 ├── Cursor rule adapter                                   # Cursor 旧版规则
 ├── IDE rule adapter directory/markitdown-auto-converter.mdc    # Cursor 新版规则
 ├── scripts/

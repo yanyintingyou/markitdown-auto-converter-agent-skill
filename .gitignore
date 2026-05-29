@@ -153,3 +153,8 @@ Thumbs.db
 /tmp/
 *.tmp
 *.bak
+*.pyc
+.env.*
+!.env.example
+node_modules/
+.venv/
